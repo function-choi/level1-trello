@@ -48,4 +48,3 @@
 - [리액트 교과서 - React 컴포넌트와 상태객체](https://velog.io/@kyusung/%EB%A6%AC%EC%95%A1%ED%8A%B8-%EA%B5%90%EA%B3%BC%EC%84%9C-React-%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EC%99%80-%EC%83%81%ED%83%9C-%EA%B0%9D%EC%B2%B4)
 - [핑프 - 나무위키](https://namu.wiki/w/%ED%95%91%EA%B1%B0%20%ED%94%84%EB%A6%B0%EC%84%B8%EC%8A%A4)
 - [좋코딩 - 질문](https://youtu.be/vf24tP_G_HY?t=389)
-- 
