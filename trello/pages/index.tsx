@@ -15,6 +15,7 @@ import type { NextPage } from 'next'
 import { useState } from 'react';
 import {nanoid} from "nanoid";
 import TaskCards from "../src/taskCards";
+import {AddIcon, DeleteIcon} from '@chakra-ui/icons';
 
 export type Task = {
   id:string;
@@ -60,10 +61,8 @@ const {isOpen : isDoingOpen, onOpen : onDoingOpen, onClose : onDoingClose} = use
 const {isOpen : isDoneOpen, onOpen : onDoneOpen, onClose : onDoneClose} = useDisclosure();
     return (
       <Box display={"flex"} justifyContent={"space-between"} bgGradient='linear(to-r, #8687F3, #FEA5D1)' width={"100%"} height="100vh">
-          <Box>
-          </Box>
           <Box width={"32%"}
-               margin={5}
+               margin={6}
                borderWidth={1}
                padding={2}
                height={"max-content"}
@@ -77,7 +76,7 @@ const {isOpen : isDoneOpen, onOpen : onDoneOpen, onClose : onDoneClose} = useDis
                     >
                     To Do
                   </Box>
-                  <Button m={2} bg={"white"} onClick={onToDoOpen }>Add Task</Button>
+                  <Button m={2} bg={"white"} onClick={onToDoOpen }><AddIcon/> </Button>
               </Box>
               <Box display={"flex"} flexDirection={"column"} >
                   <Modal isOpen={isToDoOpen} onClose={onToDoClose} >
@@ -121,7 +120,7 @@ const {isOpen : isDoneOpen, onOpen : onDoneOpen, onClose : onDoneClose} = useDis
               </Box>
           </Box>
           <Box width={"32%"}
-               margin={5}
+               marginTop={6}
                borderWidth={1}
                padding={2}
                height={"max-content"}
@@ -135,7 +134,7 @@ const {isOpen : isDoneOpen, onOpen : onDoneOpen, onClose : onDoneClose} = useDis
                   >
                       Doing
                   </Box>
-                  <Button m={2} bg={"white"} onClick={onDoingOpen}>Add Task</Button>
+                  <Button m={2} bg={"white"} onClick={onDoingOpen}><AddIcon/> </Button>
               </Box>
               <Box display={"flex"} flexDirection={"column"} >
                   <Modal isOpen={isDoingOpen} onClose={onDoingClose} >
@@ -177,7 +176,7 @@ const {isOpen : isDoneOpen, onOpen : onDoneOpen, onClose : onDoneClose} = useDis
               </Box>
           </Box>
           <Box width={"32%"}
-               margin={5}
+               margin={6}
                borderWidth={1}
                padding={2}
                height={"max-content"}
@@ -191,7 +190,7 @@ const {isOpen : isDoneOpen, onOpen : onDoneOpen, onClose : onDoneClose} = useDis
                   >
                       Done
                   </Box>
-                  <Button m={2} bg={"white"} onClick={onDoneOpen }>Add Task</Button>
+                  <Button m={2} bg={"white"} onClick={onDoneOpen }><AddIcon/> </Button>
               </Box>
               <Box display={"flex"} flexDirection={"column"} >
                   <Modal isOpen={isDoneOpen} onClose={onDoneClose} >
@@ -231,11 +230,6 @@ const {isOpen : isDoneOpen, onOpen : onDoneOpen, onClose : onDoneClose} = useDis
                   ))}
               </Box>
           </Box>
-          <Box>
-          </Box>
-
-
-
       </Box>
       )
 }

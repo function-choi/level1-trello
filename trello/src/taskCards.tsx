@@ -14,6 +14,7 @@ import {Task} from '../pages'
 import {Checkbox, CheckboxGroup} from '@chakra-ui/react';
 import {nanoid} from "nanoid";
 import {useState} from "react";
+import {DeleteIcon} from '@chakra-ui/icons';
 
 export default function TaskCards({task, onDelete}: { task: Task, onDelete: () => void }) {
     const [currentTask, updateCurrentTask] = useState(task.toDoList);
@@ -33,14 +34,13 @@ export default function TaskCards({task, onDelete}: { task: Task, onDelete: () =
             alignItems={"center"}
             onClick={onDetailOpen}
         >
-            <Heading fontSize={"2xl"} width={"20%"}>
+            <Heading fontSize={"2xl"}>
                 {task.title}
             </Heading>
-            <br/>
-            <Text width={"40%"}>
+            <Text>
                 {task.description}
             </Text>
-            <Button onClick={() => onDelete()}>delete</Button>
+            <Button onClick={() => onDelete()}><DeleteIcon/></Button>
 
             <Modal isOpen={isDetailOpen} onClose={onDetailClose}>
                 <ModalOverlay/>
@@ -50,7 +50,7 @@ export default function TaskCards({task, onDelete}: { task: Task, onDelete: () =
                     <ModalBody>
                         <Box display={"flex"} justifyItems={"center"} alignItems={"center"}>
                             <InputGroup bg={"white"} width={"80%"} margin={"2"}>
-                                <InputLeftAddon width={"7rem"}> context </InputLeftAddon>
+                                <InputLeftAddon width={"7rem"}> To Do </InputLeftAddon>
                                 <Input placeholder='input context' onChange={(e) => setContext(e.currentTarget.value)}/>
                             </InputGroup>
                             <Button onClick={() => {
@@ -60,10 +60,10 @@ export default function TaskCards({task, onDelete}: { task: Task, onDelete: () =
                                 Add
                             </Button>
                         </Box>
-                        <List>
+                        <List spacing={2}>
                             {currentTask.map((item) => (
                                 <ListItem key={item.toDoId} alignItems={"center"} alignContent={"center"}
-                                          justifyContent={"space-between"}>
+                                          justifyContent={"space-between"} display = {"flex"} margin={2}>
                                     <Checkbox
                                         isChecked={item.status}
                                         onChange={(e) => {
@@ -83,7 +83,7 @@ export default function TaskCards({task, onDelete}: { task: Task, onDelete: () =
                                             updateCurrentTask([...currentTask.slice(0, i), ...currentTask.slice(i + 1)]);
                                         }
                                     }}>
-                                        delete
+                                        <DeleteIcon/>
                                     </Button>
                                 </ListItem>
                             ))}
