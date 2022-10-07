@@ -81,9 +81,7 @@ const Home: NextPage = () => {
         ) {
             return;
         }
-        console.log(+destination.droppableId)
         const sourceTasks: Task[] = tasks[+source.droppableId]
-        console.log(sourceTasks)
         const sourceTask : Task = sourceTasks.find(
             (target) => target.id === draggableId
         ) as Task
