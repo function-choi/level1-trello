@@ -28,7 +28,11 @@ import {AddIcon, DeleteIcon, EditIcon} from '@chakra-ui/icons';
 import {ToDo} from "../pages";
 
 
-export default function TaskCards({task, onDelete}: { task: Task, onDelete: () => void }) {
+export default function TaskCards({
+                                      task,
+                                      onDelete,
+                                      dragProvided
+                                  }: { task: Task, onDelete: () => void, dragProvided: any }) {
     const [currentTask, updateCurrentTask] = useState(task.toDoList);
     const {isOpen: isDetailOpen, onOpen: onDetailOpen, onClose: onDetailClose} = useDisclosure();
     const {isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose} = useDisclosure();
@@ -36,26 +40,26 @@ export default function TaskCards({task, onDelete}: { task: Task, onDelete: () =
     const [newTitle, setNewTitle] = useState(task.title);
     const [newDescription, setNewDescription] = useState(task.description);
 
-    const changeToDoStatus = (item:ToDo) => {
+    const changeToDoStatus = (item: ToDo) => {
         const i = currentTask.findIndex((t) => t.toDoId === item.toDoId && t.context === item.context)
         updateCurrentTask([...currentTask.slice(0, i), {
             toDoId: item.toDoId,
             status: !item.status,
-                              context: item.context
-                              }, ...currentTask.slice(i + 1)])
+            context: item.context
+        }, ...currentTask.slice(i + 1)])
     }
     const addNewToDo = () => {
-            updateCurrentTask([...currentTask, {
-                toDoId: nanoid(),
-                status: false,
-                context: context
-            }]);
-            setContext("");
-        }
+        updateCurrentTask([...currentTask, {
+            toDoId: nanoid(),
+            status: false,
+            context: context
+        }]);
+        setContext("");
+    }
 
-    const deleteToDo = (item : ToDo) => {
-            const i = currentTask.findIndex((t) => t.toDoId === item.toDoId && t.context === item.context)
-            updateCurrentTask([...currentTask.slice(0, i), ...currentTask.slice(i + 1)]);
+    const deleteToDo = (item: ToDo) => {
+        const i = currentTask.findIndex((t) => t.toDoId === item.toDoId && t.context === item.context)
+        updateCurrentTask([...currentTask.slice(0, i), ...currentTask.slice(i + 1)]);
     }
 
     return (
@@ -70,7 +74,8 @@ export default function TaskCards({task, onDelete}: { task: Task, onDelete: () =
             _hover={{shadow: '2xl'}}
             alignContent={"center"}
             alignItems={"center"}
-            onClick={onDetailOpen}
+            //onClick={onDetailOpen}
+            ref={dragProvided.innerRef}{...dragProvided.draggableProps}{...dragProvided.dragHandleProps}
         >
             <Heading fontSize={"2xl"}>
                 {task.title}
@@ -119,11 +124,15 @@ export default function TaskCards({task, onDelete}: { task: Task, onDelete: () =
                                           justifyContent={"space-between"} display={"flex"} margin={2}>
                                     <Checkbox
                                         isChecked={item.status}
-                                        onChange={(e) => {changeToDoStatus(item)}
+                                        onChange={(e) => {
+                                            changeToDoStatus(item)
+                                        }
                                         }>
                                         {item.context}
                                     </Checkbox>
-                                    <Button mr={3} borderWidth={1} bg={"white"} margin={"2"} onClick={() => {deleteToDo(item)}}>
+                                    <Button mr={3} borderWidth={1} bg={"white"} margin={"2"} onClick={() => {
+                                        deleteToDo(item)
+                                    }}>
                                         <DeleteIcon/>
                                     </Button>
                                 </ListItem>

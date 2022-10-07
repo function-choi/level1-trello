@@ -1,8 +1,8 @@
 import {Box} from '@chakra-ui/react'
 import type {NextPage} from 'next'
 import Section from "../src/section"
-import { NextSeo } from 'next-seo';
-import React, { useState } from 'react'
+import {NextSeo} from 'next-seo';
+import React, {useState} from 'react'
 
 export type Task = {
     id: string;
@@ -56,25 +56,38 @@ const Home: NextPage = () => {
             ]
         });
     }
+
+    interface SectionIndex {
+        section: string;
+        index: number;
+    }
+
+    const trello: SectionIndex[] = [{section: "To Do", index: 0}, {section: "Doing", index: 1}, {
+        section: "Done",
+        index: 2
+    }]
+
+
     return (
-        <TrelloContext.Provider value={{ tasks, addTask, deleteTask}}>
+        <TrelloContext.Provider value={{tasks, addTask, deleteTask}}>
             <NextSeo
-                title= "woohyeok.trello.lv1"
+                title="woohyeok.trello.lv1"
                 openGraph={{
                     title: "woohyeok.trello.lv1",
-                    description:"3주차",
+                    description: "3주차",
                     images: [
-                        {url:"https://static.wikia.nocookie.net/wii/images/8/89/Pikachu.jpg/revision/latest?cb=20140209205851"}
-                    ]}
+                        {url: "https://static.wikia.nocookie.net/wii/images/8/89/Pikachu.jpg/revision/latest?cb=20140209205851"}
+                    ]
+                }
                 }/>
             <Box display={"flex"}
                  justifyContent={"space-between"}
                  bgGradient='linear(to-r, #8687F3, #FEA5D1)'
                  width={"100%"}
                  height="100vh">
-                <Section title={"To Do"} index={0}/>
-                <Section title={"Doing"} index={1}/>
-                <Section title={"Done"} index={2}/>
+                <Section title={trello[0].section} index={trello[0].index}/>
+                <Section title={trello[1].section} index={trello[1].index}/>
+                <Section title={trello[2].section} index={trello[2].index}/>
             </Box>
         </TrelloContext.Provider>
     )

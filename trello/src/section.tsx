@@ -15,12 +15,12 @@ import {useState, useContext} from 'react';
 import {nanoid} from "nanoid";
 import TaskCards from "../src/taskCards";
 import {AddIcon} from '@chakra-ui/icons';
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import { Task, TrelloContext } from "../pages/index"
+import {DragDropContext, Droppable, Draggable} from "react-beautiful-dnd";
+import {Task, TrelloContext} from "../pages/index"
 
 
-export default function Section({title, index}: { title: string, index:number}) {
-    const { addTask: handleAddTask, tasks: sections, deleteTask : handleDeleteTask } = useContext(TrelloContext);
+export default function Section({title, index}: { title: string, index: number }) {
+    const {addTask: handleAddTask, tasks: sections, deleteTask: handleDeleteTask} = useContext(TrelloContext);
     const tasks = sections[index];
     const [taskTitle, setTitle] = useState('');
     const [taskDescription, setDescription] = useState('');
@@ -57,68 +57,116 @@ export default function Section({title, index}: { title: string, index:number}) 
     );
 
     const addTask = () => {
-            {
-                handleAddTask?.(index, {
-                    id: nanoid(),
-                    title: taskTitle,
-                    description : taskDescription,
-                    toDoList: []
-                });
-                setTitle("")
-                setDescription("")
-                onToDoClose();
-            }
+        {
+            handleAddTask?.(index, {
+                id: nanoid(),
+                title: taskTitle,
+                description: taskDescription,
+                toDoList: []
+            });
+            setTitle("")
+            setDescription("")
+            onToDoClose();
+        }
     }
-    return(
-    <Box width={"32%"}
-         margin={6}
-         borderWidth={1}
-         padding={2}
-         height={"max-content"}
-         bg={"#EBECF0"} borderRadius={"10"}>
-        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
-            <Box
-                textAlign={"left"}
-                fontSize={"2xl"}
-                fontWeight={"bold"}
-                m={3}
-            >
-                {title}
-            </Box>
-            <Button m={2} bg={"white"} onClick={onToDoOpen}><AddIcon/> </Button>
-        </Box>
-        <Box display={"flex"} flexDirection={"column"}>
-            <Modal isOpen={isToDoOpen} onClose={onToDoClose}>
-                <ModalOverlay/>
-                <ModalContent>
-                    <ModalHeader>Add Task : {title} </ModalHeader>
-                    <ModalCloseButton/>
-                    <ModalBody>
-                        <Box>
-                            <InputGroup bg={"white"} width={"80%"} margin={"2"}>
-                                <InputLeftAddon width={"7rem"}> title </InputLeftAddon>
-                                <Input placeholder='input title'
-                                       onChange={(e) => setTitle(e.currentTarget.value)}/>
-                            </InputGroup>
-                            <InputGroup bg={"white"} width={"80%"} margin={"2"}>
-                                <InputLeftAddon width={"7rem"}> description </InputLeftAddon>
-                                <Input placeholder='input description'
-                                       onChange={(e) => setDescription(e.currentTarget.value)}/>
-                            </InputGroup>
+
+    const updateTaskOrdering = (result: any) => {
+        console.log("ordering")
+        const {destination, source, draggableId} = result;
+        if (!destination) {
+            return;
+        }
+
+        if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+        ) {
+            return;
+        }
+        const sourceTask: Task = tasks.find(
+            (selTask) => selTask.id === draggableId
+        ) as Task;
+        const updatedTasks: Task[] = Array.from(tasks);
+        updatedTasks.splice(source.index, 1);
+        updatedTasks.splice(destination.index, 0, sourceTask);
+        setTasks(updatedTasks);
+    };
+
+
+    return (
+        <DragDropContext onDragEnd={updateTaskOrdering}>
+            <Droppable droppableId="section">
+                {(dropProvided) => (
+                    <Box width={"32%"}
+                         margin={6}
+                         borderWidth={1}
+                         padding={2}
+                         height={"max-content"}
+                         bg={"#EBECF0"} borderRadius={"10"}
+                         ref={dropProvided.innerRef}{...dropProvided.droppableProps}>
+                        <Box display={"flex"} justifyContent={"space-between"} alignItems={"center"}>
+                            <Box
+                                textAlign={"left"}
+                                fontSize={"2xl"}
+                                fontWeight={"bold"}
+                                m={3}
+                            >
+                                {title}
+                            </Box>
+                            <Button m={2} bg={"white"} onClick={onToDoOpen}><AddIcon/> </Button>
                         </Box>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button mr={3} borderWidth={1} bg={"white"} margin={"2"} onClick={() => addTask()}>
-                            Add Task
-                        </Button>
-                    </ModalFooter>
-                </ModalContent>
-            </Modal>
-            {tasks.map((task: Task) => (
-                    <TaskCards task={task} key={task.id} onDelete={
-                        () => handleDeleteTask(index,task)
-                    }/>
-            ))}
-        </Box>
-    </Box>)
+                        <Box display={"flex"} flexDirection={"column"}>
+                            <Modal isOpen={isToDoOpen} onClose={onToDoClose}>
+                                <ModalOverlay/>
+                                <ModalContent>
+                                    <ModalHeader>Add Task : {title} </ModalHeader>
+                                    <ModalCloseButton/>
+                                    <ModalBody>
+                                        <Box>
+                                            <InputGroup bg={"white"} width={"80%"} margin={"2"}>
+                                                <InputLeftAddon width={"7rem"}> title </InputLeftAddon>
+                                                <Input placeholder='input title'
+                                                       onChange={(e) => setTitle(e.currentTarget.value)}/>
+                                            </InputGroup>
+                                            <InputGroup bg={"white"} width={"80%"} margin={"2"}>
+                                                <InputLeftAddon width={"7rem"}> description </InputLeftAddon>
+                                                <Input placeholder='input description'
+                                                       onChange={(e) => setDescription(e.currentTarget.value)}/>
+                                            </InputGroup>
+                                        </Box>
+                                    </ModalBody>
+                                    <ModalFooter>
+                                        <Button mr={3} borderWidth={1} bg={"white"} margin={"2"}
+                                                onClick={() => addTask()}>
+                                            Add Task
+                                        </Button>
+                                    </ModalFooter>
+                                </ModalContent>
+                            </Modal>
+                            {tasks.map((task: Task, idx: number) => (
+                                <Draggable draggableId={task.id} index={idx - 1} key={task.id}>
+                                    {(dragProvided) =>
+                                        <TaskCards task={task}
+                                                   key={task.id}
+                                                   onDelete={
+                                                       () => handleDeleteTask(index, task)
+                                                   }
+                                                   dragProvided={dragProvided}/>
+                                    }
+                                </Draggable>
+                            ))}
+                            {dropProvided.placeholder}
+                        </Box>
+                    </Box>
+                )}
+            </Droppable>
+        </DragDropContext>
+    )
 }
+
+
+
+
+
+
+
