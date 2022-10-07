@@ -3,6 +3,7 @@ import type {NextPage} from 'next'
 import Section from "../src/section"
 import {NextSeo} from 'next-seo';
 import React, {useState} from 'react'
+import {DragDropContext} from "react-beautiful-dnd";
 
 export type Task = {
     id: string;
@@ -59,14 +60,40 @@ const Home: NextPage = () => {
 
     interface SectionIndex {
         section: string;
-        index: number;
+        sectionIndex: number;
     }
 
-    const trello: SectionIndex[] = [{section: "To Do", index: 0}, {section: "Doing", index: 1}, {
+    const trello: SectionIndex[] = [{section: "To Do", sectionIndex: 0}, {section: "Doing", sectionIndex: 1}, {
         section: "Done",
-        index: 2
+        sectionIndex: 2
     }]
 
+    const updateTaskOrdering = (result: any) => {
+
+        const {destination, source, draggableId} = result;
+        if (!destination) {
+            return;
+        }
+
+        if (
+            destination.droppableId === source.droppableId &&
+            destination.index === source.index
+        ) {
+            return;
+        }
+        console.log(+destination.droppableId)
+        const sourceTasks: Task[] = tasks[+source.droppableId]
+        console.log(sourceTasks)
+        const sourceTask : Task = sourceTasks.find(
+            (target) => target.id === draggableId
+        ) as Task
+        const sourceUpdatedTasks: Task[] = tasks[+source.droppableId]
+        const destinationUpdatedTasks: Task[] = tasks[+destination.droppableId]
+        sourceUpdatedTasks.splice(source.index, 1);
+        destinationUpdatedTasks.splice(destination.index, 0, sourceTask);
+        setTasks([...tasks.slice(0,+source.droppableId),sourceUpdatedTasks,...tasks.slice(+source.droppableId+1)]);
+        setTasks([...tasks.slice(0,+destination.droppableId),destinationUpdatedTasks,...tasks.slice(+destination.droppableId+1)]);
+    };
 
     return (
         <TrelloContext.Provider value={{tasks, addTask, deleteTask}}>
@@ -80,15 +107,17 @@ const Home: NextPage = () => {
                     ]
                 }
                 }/>
-            <Box display={"flex"}
-                 justifyContent={"space-between"}
-                 bgGradient='linear(to-r, #8687F3, #FEA5D1)'
-                 width={"100%"}
-                 height="100vh">
-                <Section title={trello[0].section} index={trello[0].index}/>
-                <Section title={trello[1].section} index={trello[1].index}/>
-                <Section title={trello[2].section} index={trello[2].index}/>
-            </Box>
+            <DragDropContext onDragEnd={updateTaskOrdering}>
+                <Box display={"flex"}
+                     justifyContent={"space-between"}
+                     bgGradient='linear(to-r, #8687F3, #FEA5D1)'
+                     width={"100%"}
+                     height="100vh">
+                    <Section title={trello[0].section} sectionIndex={trello[0].sectionIndex}/>
+                    <Section title={trello[1].section} sectionIndex={trello[1].sectionIndex}/>
+                    <Section title={trello[2].section} sectionIndex={trello[2].sectionIndex}/>
+                </Box>
+            </DragDropContext>
         </TrelloContext.Provider>
     )
 }

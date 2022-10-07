@@ -26,6 +26,7 @@ import {nanoid} from "nanoid";
 import {useState} from "react";
 import {AddIcon, DeleteIcon, EditIcon} from '@chakra-ui/icons';
 import {ToDo} from "../pages";
+import {Draggable} from "react-beautiful-dnd";
 
 
 export default function TaskCards({
