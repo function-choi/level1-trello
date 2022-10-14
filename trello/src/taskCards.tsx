@@ -34,7 +34,7 @@ export default function TaskCards({
                                       onDelete,
                                       dragProvided
                                   }: { task: Task, onDelete: () => void, dragProvided: any }) {
-    const [currentTask, updateCurrentTask] = useState(task.toDoList);
+    const [currentTask, updateCurrentTask] = useState(task.toDoList || []);
     const {isOpen: isDetailOpen, onOpen: onDetailOpen, onClose: onDetailClose} = useDisclosure();
     const {isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose} = useDisclosure();
     const [context, setContext] = useState('');
@@ -90,6 +90,14 @@ export default function TaskCards({
                     onEditOpen()
                     setNewTitle(task.title);
                     setNewDescription(task.description);
+                    fetch(`api/tasks/${task.id}`, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            title: task.title,
+                            description: task.description,
+                            id: task.id
+                        }),
+                    })
                 }}>
                     <EditIcon/>
                 </Button>

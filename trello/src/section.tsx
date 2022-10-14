@@ -27,34 +27,7 @@ export default function Section({title, sectionIndex}: { title: string, sectionI
     const [taskDescription, setDescription] = useState('');
     const {isOpen: isToDoOpen, onOpen: onToDoOpen, onClose: onToDoClose} = useDisclosure();
     const [, setTasks] = useState<Task[]>(
-        [
-            {
-                id: nanoid(),
-                title: "title 1",
-                description: "description 1",
-                toDoList: []
-            },
-            {
-                id: nanoid(),
-                title: "title 2",
-                description: "description 2",
-                toDoList: [{toDoId: nanoid(), status: false, context: "1"}, {
-                    toDoId: nanoid(),
-                    status: true,
-                    context: "2"
-                }]
-            },
-            {
-                id: nanoid(),
-                title: "title 3",
-                description: "description 3",
-                toDoList: [{toDoId: nanoid(), status: true, context: "1"}, {
-                    toDoId: nanoid(),
-                    status: false,
-                    context: "2"
-                }]
-            }
-        ]
+        []
     );
 
     const addTask = () => {
@@ -70,7 +43,6 @@ export default function Section({title, sectionIndex}: { title: string, sectionI
             onToDoClose();
         }
     }
-
 
 
     useEffect(() => {
